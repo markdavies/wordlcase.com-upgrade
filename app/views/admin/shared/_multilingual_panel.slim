@@ -1,0 +1,16 @@
+div.panel.panel-default.admin-panel
+  div.panel-heading
+    div.btn-group
+      - I18n.available_locales.each_with_index do |lang, index|
+        button.btn.btn-default type="button" data-variant="#{lang}" tab-index="#{index+1}" =lang
+  div.panel-body
+    - I18n.available_locales.each_with_index do |lang, index|          
+      - value = object.send(field, lang)
+      - name = "#{object.class.name.underscore}[#{field}][#{lang}]"
+      - id = "#{object.class.name.underscore}_#{field}_#{lang}"
+      - data = {variant: "#{lang}"}
+      
+      - if type == 'textarea'
+        = form.text_area field.to_sym, name: name, id: id, value: value, class: 'form-control', data: data
+      - else
+        = form.text_field field.to_sym, name: name, id: id, value: value, class: 'form-control', data: data

@@ -1,0 +1,52 @@
+
+- thumbnail_template = local_assigns.fetch :thumbnail_template, false
+- item_edit_path = local_assigns.fetch :item_edit_path, false
+- item_edit_method = local_assigns.fetch :item_edit_method, false
+- add_remove = local_assigns.fetch :add_remove, false
+- position_scope_name = local_assigns.fetch :position_scope_name, false
+- position_scope = local_assigns.fetch :position_scope, false
+- name_field = local_assigns.fetch :name_field, 'name'
+
+- template = (render partial: 'admin/shared/sortable_list_item', locals: {item: template_source, thumbnail_template: thumbnail_template, item_edit_path: item_edit_path, item_edit_method: item_edit_method, add_remove: add_remove, name_field: name_field}).encode
+
+.panel.panel-default.admin-panel.sortable-list data-class=klass.to_s.singularize data-parent=parent data-template=template data-submittable="false"
+
+  .panel-heading
+
+    - if defined? new_item_path
+      a.btn.btn-default.pull-right href="#{new_item_path}"
+        = "Add #{klass.capitalize}"
+
+    - if add_remove
+      .select-list.pull-right
+        select.sortable-add-select.form-control
+          - addable_items.each do |item|
+            - thumbnail = thumbnail_template ? render(partial: thumbnail_template, local: {item: item}) : image_tag(item.thumbnail_image)
+            option value=item.id disabled=existing_items.include?(item) data-thumbnail=thumbnail.encode data-caption=item.send(name_field) data-id=item.id
+              = item.send(name_field)
+        a.btn.btn-default.sortable-add-button href="#"
+          = "Add"
+
+  .panel-body
+    .row.list.sortable
+
+      .no-items class="#{(existing_items.length > 0) ? 'hide' : ''}"
+        = "Nothing to see here"
+
+      - existing_items.each do |item|
+
+        = render partial: 'admin/shared/sortable_list_item', locals: {item: item, thumbnail_template: thumbnail_template, item_edit_path: item_edit_path, item_edit_method: item_edit_method, add_remove: add_remove, name_field: name_field}
+  
+  
+  input.sortable-positions name="#{parent}[#{klass.to_s.singularize}_positions][]" value="" type="hidden"
+
+  - if position_scope
+    input name="#{parent}[#{klass.to_s.singularize}_position_scopes][]" value=position_scope type="hidden"
+
+  - if position_scope_name
+    input name="#{parent}[#{klass.to_s.singularize}_position_scope_name]" value=position_scope_name type="hidden"
+  .sortable-id-list
+
+
+
+

@@ -1,0 +1,15 @@
+
+form class="position_form_sortable" action=admin_set_positions_path method="post"
+  input type="hidden" name="start_index" value=start_index
+  input type="hidden" name="positions"
+  input type="hidden" name="klass"
+  input type="hidden" name="page" value=params[:page]
+  input type="hidden" name="authenticity_token" value=form_authenticity_token
+  
+form class="position_form_select" action=admin_set_position_path method="post"
+  input type="hidden" name="id"
+  input type="hidden" name="section"
+  input type="hidden" name="position"
+  input type="hidden" name="klass"
+  input type="hidden" name="page" value=params[:page]
+  input type="hidden" name="authenticity_token" value=form_authenticity_token

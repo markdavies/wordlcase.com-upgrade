@@ -1,0 +1,208 @@
+@import "bourbon";
+
+.st-block[data-type="gallery"] {
+
+  ul {
+    list-style: none;
+  }
+
+  .st-block__inner {
+    .options {
+      select, button {
+        vertical-align: top;
+      }
+      button.toggle-add {
+        display: none;
+        float: right;
+      }
+    }
+  }
+
+  &:hover {
+    .st-block__inner {
+      border-color: $green;
+    }
+  }
+
+  &.st-block--delete-active {
+    .st-block__inner {
+      border-color: $red;
+    }    
+  }
+
+  ul.progress-items {
+    margin: 0;
+    padding: 0;
+    li {
+      position: relative;
+      .progress {
+        margin-bottom: 10px;
+        clear: both;
+      }
+      .progress-text {
+        font-size: 12px;
+        color: $mdgray;
+      }
+
+      .filename {
+        display: inline-block;
+        float: left;
+      }
+      .status {
+        display: inline-block;
+        float: right;
+        &.error {
+            color: $red;
+        }
+      }
+    }
+  }
+
+  .add-new{
+    text-align: right;
+  }
+
+  .st-block__inputs {
+    margin: 10px 0;
+  }
+
+  .st-block__inputs_inspiration_galleries {
+    .inspiration-galleries {
+      .inspiration-gallery {
+        width: 768px;
+        height: 600px;
+        position: relative;
+        margin: 0 auto;
+        display: none;
+        .item {
+          background-color: rgba(0, 0, 0, .1);
+          border: solid 2px transparent;         
+          position: absolute;
+          z-index: 1;
+          @include box-sizing(border-box);
+          img {
+            width: 100%;
+          }
+
+          &[data-style="portrait"] {
+            width: 220px;
+            height: 300px;
+          }
+
+          &[data-style="landscape"] {
+            width: 350px;
+            height: 258px;
+          }
+
+          &[data-style="square"] {
+            width: 200px;
+            height: 200px;
+          }
+
+          &:hover {
+            border-color: $green;
+            z-index: 2;
+          }
+        }
+
+        &.inspiration-1 {
+          .item {
+            &[data-style="portrait"] {
+              top: 50px;
+              left: 160px;
+              @include transform ( rotate(-5deg) );
+            }
+
+            &[data-style="landscape"]:nth-child(2) {
+              top: 50px;
+              left: 380px;
+              @include transform ( rotate(5deg) );
+            }
+
+            &[data-style="landscape"]:nth-child(3) {
+              top: 190px;
+              left: 30px;
+              @include transform ( rotate(0deg) scale(.95) );
+            }
+
+            &[data-style="square"]:nth-child(4) {
+              top: 200px;
+              left: 440px;
+              @include transform ( rotate(-5deg) scale(1.1));
+            }
+
+            &[data-style="square"]:nth-child(5) {
+              top: 340px;
+              left: 355px;
+              @include transform ( rotate(0deg) scale(1.25) );
+            }
+          }
+        }
+      }
+    }
+  }  
+
+  ul.images {    
+    list-style: none;
+    margin: 20px 0 25px 0;
+    padding: 0;
+    li {
+      width: 20%;
+      display: inline-block;
+      position: relative;
+      border: solid 2px transparent;
+      text-align: center;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        cursor: move;
+      }      
+    }
+  }
+
+
+  ul.images, ul.inspiration-gallery {
+    li {
+      .st-li-controls, .st-li-delete-controls {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: none;
+        a {
+          width: 50px;
+          height: 40px;
+          line-height: 40px;
+        }
+      }
+      
+      .st-li-delete-controls {
+        color: $red;
+        .st-block-ui-btn {
+          color: $red;
+          border-color: $red;
+          &:hover {
+            color: white;
+            background-color: $red;
+          }
+        }
+      }      
+
+      &[data-id]:hover {
+        border-color: $green;
+        .st-li-controls {
+        display: block;
+        opacity: 1;
+        }
+      }
+
+      &.delete {
+        border-color: $red;
+        .st-li-delete-controls {
+          display: block;
+          opacity: 1;
+          z-index: 10;
+        }
+      }
+    }              
+  }
+}

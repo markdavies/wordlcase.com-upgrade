@@ -1,0 +1,4 @@
+- if @output.nil?
+  = raw({status: 1, message: 'fail'}.to_json)
+- else 
+  = raw(@output)

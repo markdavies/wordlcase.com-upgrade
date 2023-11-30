@@ -1,0 +1,50 @@
+
+- if @pack
+  - href = admin_pack_import_data_path(pack_id: @pack.id, mode: 'selective')
+- elsif @puzzle
+  - href = admin_import_puzzle_data_path(puzzle_id: @puzzle.id, mode: 'selective')
+- else
+  - href = admin_multi_import_data_path
+
+
+.modal.fade#selective-sync-modal
+  .modal-dialog
+    .modal-content
+
+      form.selective-sync-form action=href
+
+        input type="hidden" name="ids" value=""
+        
+        .modal-header
+          button type="button" class="close" data-dismiss="modal" aria-label="Close"
+            span aria-hidden="true" &times;
+          h4 class="modal-title" Selective Sync
+        
+        .modal-body
+
+          h4 Sync content
+
+          .radio-inline
+            label
+              input type="radio" name="content" value="all" checked=('checked' if @sync_prefs && @sync_prefs['content'] == 'all')
+              | All data
+
+          .radio-inline
+            label
+              input type="radio" name="content" value="captions" checked=('checked' if @sync_prefs && @sync_prefs['content'] == 'captions')
+              | Only captions
+
+          hr
+
+          h4 Languages
+
+          - @languages.each do |language|
+            .checkbox
+              label
+                input type="checkbox" name="language[]" value=language.code checked=('checked' if @sync_prefs && @sync_prefs['language'].include?(language.code))
+                = "#{language.name} (#{language.code})"
+
+
+
+        .modal-footer
+          button.btn.btn-default.update-selective-sync type="submit" Go

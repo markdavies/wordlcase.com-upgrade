@@ -1,0 +1,54 @@
+header
+  nav.main.navbar.navbar-default
+    .container
+      .navbar-header
+        button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-nav"
+          span class="sr-only" Toggle navigation
+          span class="icon-bar"
+          span class="icon-bar"
+          span class="icon-bar"
+        a class="navbar-brand" href="#{admin_root_path}" 
+          = image_tag 'icon-wordlaces.png'
+          | Word Laces Admin
+  
+      div id="main-nav" class="collapse navbar-collapse"
+        ul class="nav navbar-nav"
+          li class="#{ 'active' if params[:controller] == 'admin/packs' }"
+            = link_to "Puzzle Packs", admin_packs_path
+
+          li class="#{ 'active' if params[:controller] == 'admin/config' || params[:controller] == 'admin/languages' }"
+            = link_to "Config", admin_config_path
+
+          li class="#{ 'active' if params[:controller] == 'admin/api_tester' }"
+            = link_to "API Tester", admin_api_test_path
+
+          li class="#{ 'active' if params[:controller] == 'admin/api_tester' }"
+            = link_to "Job Status", admin_jobs_status_path
+
+        ul class="nav navbar-nav navbar-right"
+          li= link_to 'Log Out', destroy_admin_user_session_path, method: :delete
+    
+  #breadcrumb
+    .container
+      ol.breadcrumb
+        = render_breadcrumbs tag: :li, separator: ""
+
+  #outputinfo
+    .container
+      - if @output_info
+        .info
+          = @output_info
+  
+  #flash
+    - if flash[:errors]
+      .errors
+        .container
+          ul    
+            - flash[:errors].each do |error|
+              li=error.html_safe
+    - if flash[:notices]
+      .notice
+        .container
+          ul    
+            - flash[:notices].each do |notice|
+              li=notice.html_safe

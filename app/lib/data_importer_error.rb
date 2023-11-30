@@ -1,0 +1,2 @@
+class DataImporterError < StandardError
+end

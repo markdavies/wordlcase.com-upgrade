@@ -1,0 +1,2 @@
+class ImageImporterError < StandardError
+end

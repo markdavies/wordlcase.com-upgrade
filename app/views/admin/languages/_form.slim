@@ -1,0 +1,35 @@
+
+= form_for [:admin, @language], html: {}, url: @url do |f|
+
+  div.row.form-actions
+    div.col-md-6.col-sm-offset-6
+
+      .btn-group
+        = f.submit 'Save', class: 'btn btn-default'
+
+        button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+          span.caret
+          span.sr-only Toggle Dropdown
+        ul.dropdown-menu.pull-right role="menu"
+          li 
+            a.save-edit href="#" Save and Edit
+          li
+            a href="#{admin_languages_path}" Cancel
+          - unless @language.new_record?
+            li.divider
+            li= link_to 'Delete', admin_language_path(id: @language), method: :delete, 
+              data: { confirm: "Are you sure you want to delete this language?" }
+
+  .row.form-group
+
+    .col-sm-6
+
+      .row
+        .form-group.col-sm-12
+          = f.label :name, class: 'control-label'
+          = f.text_field :name, class: 'form-control'
+
+      .row
+        .form-group.col-sm-12
+          = f.label :code, class: 'control-label'
+          = f.text_field :code, class: 'form-control'

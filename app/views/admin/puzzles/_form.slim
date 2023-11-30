@@ -1,0 +1,185 @@
+
+- max_count = @puzzle.pack.pack_puzzles.count - 1
+- max_count = max_count + 1 if @puzzle.new_record?
+
+= form_for [:admin, @puzzle], url: @url, html: {} do |f|
+
+  .row.form-actions
+    .col-md-6.col-sm-offset-6
+
+      - if !@puzzle.new_record?
+        
+        button.btn.btn-default.move-puzzle type="button" data-toggle="modal" data-target="#move-puzzle-modal" Move puzzle
+
+        .btn-group
+          
+          - href = @puzzle.data_processing ? '#' : admin_import_puzzle_data_path(puzzle_id: @puzzle.id)
+
+          - if !@puzzle.data_processing
+            button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+              = image_tag 'icon-drive.png', size: "18x18"
+              = "Sync data "
+              span.caret
+              span.sr-only Toggle Dropdown
+            ul.dropdown-menu role="menu"
+              li
+                a href=href class="#{@pack.has_layouts ? 'confirm-action' : ''}" data-confirm-msg="This pack has layouts - really sync the data and destroy them?"
+                  = "Sync data"
+              li
+                a.selective-sync type="button" data-toggle="modal" data-target="#selective-sync-modal"
+                  = "Sync data (SELECTIVE)"
+
+          - else
+            button.btn.btn-default.dropdown-toggle.disabled type="button"
+              = image_tag 'icon-drive.png', size: "18x18"
+              = "Data syncing ..."
+
+
+      div.btn-group
+        = f.submit 'Save', class: 'btn btn-default'
+
+        button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+          span.caret
+          span.sr-only Toggle Dropdown
+        ul.dropdown-menu.pull-right role="menu"
+          li 
+            a.save-edit href="#" Save and Edit
+          li
+            a href="#{admin_packs_path}" Cancel
+          - unless @puzzle.new_record? 
+            li.divider
+            li= link_to 'Delete', admin_puzzle_path(id: @puzzle), method: :delete, data: { confirm: "Are you sure you want to delete this pack puzzle?" }
+
+  = f.hidden_field :pack_id
+
+  .row
+    .col-sm-4
+      = render partial: 'admin/shared/image_panel', object: @puzzle_asset, locals: { form: f, attachments: [{name: :image, styles: [ :original ], title: 'Image', upload_copy: ' - 768x768 JPG'}], zoomable: true}
+
+    .col-sm-8
+
+      .row
+        .col-sm-6
+
+          .form-group
+            = f.label :position, 'Index'
+            br
+            = f.select :position, (0..max_count).to_a.collect{|i| [i+1, i]}, {}, {class: 'form-control link-item'}
+
+        .col-sm-6.form-group
+          = f.label :asset_image_id
+          br
+          = f.text_field :asset_image_id, class: 'form-control'
+
+  
+      - if @languages.length > 1
+
+        ul.nav.nav-tabs
+          
+          - @languages.each_with_index do |language, index|
+              li role="presentation" class=(index == 0 ? 'active' : '')
+                a data-code=language.code href="#" =language.code
+
+      .tab-content
+
+        .row
+          .col-sm-12
+            - @languages.each_with_index do |language, index|
+
+              .tab-pane class=(index == 0 ? 'active' : '') data-code=language.code
+
+                .row
+                  .col-sm-12
+                    .form-group
+                      label.quality-label 
+                        | Answers 
+                        = raw pretty_quality(@puzzle.quality(language.code))
+                      - value = @puzzle.answers(language.code)
+                      - value = value.join(',') rescue ''
+                      input.form-control type="text" name="pack_puzzle[answers][#{language.code}]" value=value
+
+                .row
+                  .col-sm-12
+                    .form-group
+                      label Blacklist
+                      br
+                      - value = @puzzle.blacklist(language.code)
+                      - value = value.join(',') rescue ''
+                      input.form-control type="text" name="pack_puzzle[blacklist][#{language.code}]" value=value
+
+                .row
+                  .col-sm-12
+                    .form-group
+                      label Caption
+                      br
+                      - value = @puzzle.caption(language.code)
+                      input.form-control type="text" name="pack_puzzle[caption][#{language.code}]" value=value
+
+
+      - if @puzzle_asset.image.present?
+
+        .row
+          .col-sm-12
+            label Image Path
+
+        .row.form-group
+          
+          .col-sm-12
+            .input-group
+              .input-group-addon Regular
+              input.form-control.version disabled="disabled" type="text" name="tiny" value=@puzzle_asset.image.url(:large, timestamp: false)
+
+      .row
+        .col-sm-12.form-group
+          = f.label :extra_data, class: 'control-label'
+          = f.text_area :extra_data, class: 'form-control', rows: 5
+
+      .row
+        .col-sm-12.form-group
+          = f.label :puzzle, class: 'control-label'
+          = f.text_area :puzzle, class: 'form-control', rows: 10
+
+
+.modal.fade#move-puzzle-modal data-info-url=admin_pack_info_path({pack_id: 'ID'}) data-move-url=admin_puzzle_move_path
+  .modal-dialog
+    .modal-content
+      
+      .modal-header
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h4 class="modal-title" Move puzzle
+      
+      .modal-body
+
+        form.move-form
+
+          input type="hidden" name="puzzle_id" value=@puzzle.id
+
+          .row.form-group
+            .col-sm-12
+              select.form-control.pack-select name="pack_id"
+                option value="" To pack ...
+                - @packs.each do |pack|
+                  - if pack.pack_code != @pack.pack_code
+                    option value=pack.id = pack.pack_code
+
+          .row.form-group.action
+            .col-sm-12
+              select.form-control.action-select name="action_type"
+                option value="" Action ...
+                option value="move-before" Move before
+                option value="move-after" Move after
+                option value="swap" Swap with
+
+          .row.form-group.target
+            .col-sm-12
+              select.form-control.target-select name="target_id"
+                option value="" Target ...
+
+          .row.form-group.submit
+            .col-sm-12
+              button.btn.btn-default.move-puzzle-btn type="button" Go
+              
+
+
+= render partial: 'admin/shared/modal_sync'

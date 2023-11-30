@@ -1,0 +1,27 @@
+
+= form_for [:admin, @pack], html: {}, url: @url do |f|
+
+  div.row.form-actions
+    div.col-md-12
+      .btn-group
+        = f.submit 'Save', class: 'btn btn-default'
+
+        button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+          span.caret
+          span.sr-only Toggle Dropdown
+          
+        ul.dropdown-menu.pull-right role="menu"
+          li 
+            a.save-edit href="#" Save and Edit
+          li
+            a href="#{admin_packs_path}" Cancel
+
+
+  .row.form-group
+
+    .col-sm-6
+
+      .row
+        .form-group.col-sm-12
+          = f.label :pack_code, class: 'control-label'
+          = f.text_field :pack_code, class: 'form-control', disabled: !@pack.new_record?

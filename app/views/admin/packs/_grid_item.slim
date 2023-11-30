@@ -1,0 +1,44 @@
+
+- if puzzle.pack.tested_primary
+  - is_invalid = puzzle.status_missing_locales || puzzle.status_invalid
+- else
+  - is_invalid = puzzle.status_invalid
+
+.puzzle-item.sort-item data-id=puzzle.id class="#{is_invalid ? 'invalid' : ''}"
+  
+  .panel.panel-default
+
+    .panel-heading 
+      strong
+        .label.label-default = puzzle.game_position_or_date
+        = raw "&nbsp;&nbsp;"
+        = puzzle.image_id
+
+      .puzzle-actions
+        a.fa.fa-pencil-square-o data-toggle="tooltip" data-placement="top" title="Edit Pack Puzzle" href=edit_admin_puzzle_path(id: puzzle.id)
+        a.fa.fa-code data-toggle="tooltip" data-placement="top" title="View Pack Puzzle JSON" href=admin_puzzle_path(id: puzzle, format: :json) target="_blank"
+
+    .panel-body
+      .row
+
+        .col-sm-6
+
+          - if puzzle.puzzle_asset && !puzzle.puzzle_asset.image_reprocessing
+            img.thumbnail-image.unveil src=asset_url('transparent.gif') data-src=asset_path(puzzle.puzzle_asset.image(:medium_thumbnail))
+          - else
+            img.thumbnail-image src=asset_path('transparent.gif')
+
+          .language-quality
+            - @languages.each do |language|
+              = raw pretty_quality(puzzle.quality(language.code))
+            = raw "&nbsp;"
+
+        .col-sm-6
+
+          = raw puzzle.display_answers.join('<br/>')
+
+      - caption = raw puzzle.caption(Language::CODE_ENGLISH)
+      - if caption
+        .row.caption-row
+          .col-sm-12
+              strong = raw puzzle.caption(Language::CODE_ENGLISH)

@@ -1,0 +1,188 @@
+
+- invalid_packs = @invalid_packs.collect(&:pack_code).join(',')
+- config = AppConfig.get
+
+.row.packs-search-row
+  .col-sm-12
+
+    form action=admin_search_puzzles_path method="post"
+
+      .input-group.input-group-lg.search-puzzles
+
+        input.form-control type="text" class="" name="q" placeholder="Search Pack Puzzles" value=@searched
+
+        span.input-group-btn
+          input.btn.btn-default type="submit" Search
+
+.row.packs-button-row
+  
+  .col-sm-6
+    .btn-group
+
+      .btn.btn-default
+        - if params[:filter] == Pack::TYPE_CLASSIC
+          | Classic Packs
+        - elsif params[:filter] == Pack::TYPE_CHINESE
+          | Chinese Packs
+        - elsif params[:filter] == Pack::TYPE_DAILY
+          | Daily Packs
+        - elsif params[:filter] == Pack::TYPE_SPECIAL
+          | Special Packs
+        - else
+          | All Packs
+
+
+      button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+        span.caret
+        span.sr-only Toggle Dropdown
+      
+      ul.dropdown-menu.pack-type-dropdown role="menu"
+        li 
+          a href="#{admin_packs_path}" All Packs
+        li 
+          a href="#{admin_packs_path}?filter=#{Pack::TYPE_CLASSIC}" Classic Packs
+        li 
+          a href="#{admin_packs_path}?filter=#{Pack::TYPE_CHINESE}" Chinese Packs
+        li 
+          a href="#{admin_packs_path}?filter=#{Pack::TYPE_DAILY}" Daily Packs
+        li 
+          a href="#{admin_packs_path}?filter=#{Pack::TYPE_SPECIAL}" Special Packs
+
+    | &nbsp;&nbsp;
+    .btn-group
+
+      .btn.btn-default
+        | Export Answers
+
+
+      button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+        span.caret
+        span.sr-only Toggle Dropdown
+      
+      ul.dropdown-menu.language-dropdown role="menu"
+        - Language.all.each do |lang|
+          li 
+            a href="#{admin_export_answers_path(lang: lang.code, pack_type: params[:filter], format: 'csv')}" = lang.name
+
+    - if @config.sprite_sheet_status == 'stale'
+      | &nbsp;&nbsp;
+      a.btn.btn-default href=admin_generate_sprite_sheets_path
+        | Regenerate thumbnails
+    
+    - elsif @config.sprite_sheet_status == 'refreshing'
+      | &nbsp;&nbsp;
+      a.btn.btn-default disabled="disabled" href="#"
+        | Thumbnails refreshing ...
+
+    - elsif @config.puzzle_sheets.exists?
+      | &nbsp;&nbsp;
+      a.btn.btn-default href=@config.puzzle_sheets(:original)
+        = image_tag 'icon-download.png', size: "18x18"
+        | Download Sprite Sheets
+
+  .col-sm-6
+
+    .btn-group.bulk-create-packs
+
+      a.btn.btn-default href=new_admin_pack_path New Pack
+
+      button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+        span.caret
+        span.sr-only Toggle Dropdown
+      
+      ul.dropdown-menu.pull-right role="menu"
+        li 
+          a data-number="1" data-type=Pack::TYPE_CLASSIC href=admin_create_packs_path({type: Pack::TYPE_CLASSIC, number: 1}) Next Classic pack
+        li 
+          a data-number="10" data-type=Pack::TYPE_CLASSIC href=admin_create_packs_path({type: Pack::TYPE_CLASSIC, number: 10}) 10 Classic packs
+        li 
+          a data-number="1" data-type=Pack::TYPE_DAILY href=admin_create_packs_path({type: Pack::TYPE_DAILY, number: 1}) Next Daily pack
+        li 
+          a data-number="10" data-type=Pack::TYPE_DAILY href=admin_create_packs_path({type: Pack::TYPE_DAILY, number: 10}) 10 Daily packs
+        li 
+          a data-number="1" data-type=Pack::TYPE_CHINESE href=admin_create_packs_path({type: Pack::TYPE_CHINESE, number: 1}) Next Chinese pack
+        li 
+          a data-number="10" data-type=Pack::TYPE_CHINESE href=admin_create_packs_path({type: Pack::TYPE_CHINESE, number: 10}) 10 Chinese packs
+        li 
+          a data-number="1" data-type=Pack::TYPE_SPECIAL href=admin_create_packs_path({type: Pack::TYPE_SPECIAL, number: 1}) Next Special pack
+        li 
+          a data-number="10" data-type=Pack::TYPE_SPECIAL href=admin_create_packs_path({type: Pack::TYPE_SPECIAL, number: 10}) 10 Special packs
+
+- if @packs
+
+  div
+    table.table.table-striped.table-hover
+      thead
+        tr
+          th &nbsp;
+          th Pack ID
+          th Start Date
+          th Modified
+          th Published
+          th Status
+          th Quality
+
+      tbody
+
+        tr
+          td.bulk-actions colspan="7"
+
+            .btn-group
+
+              a.btn.btn-default.confirm-action href=admin_multi_toggle_published_path data-confirm-msg="Really toggle publishable packs?"
+                span Toggle Published
+
+              .btn-group
+
+                button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+                  = image_tag 'icon-drive.png', size: "18x18"
+                  = "Sync data "
+                  span.caret
+                  span.sr-only Toggle Dropdown
+
+                ul.dropdown-menu role="menu"
+                  li
+                    a.confirm-action href=admin_multi_import_data_path data-confirm-msg="These packs may contain layouts - really sync the data and destroy them?"
+                      = "Sync data"
+                  li
+                    a.selective-sync type="button" data-toggle="modal" data-target="#selective-sync-modal"
+                      = "Sync data (SELECTIVE)"
+
+              a.btn.btn-default.confirm-action href=admin_multi_import_images_path data-confirm-msg="Really import images?"
+                = image_tag 'icon-dropbox.png', size: "18x18"
+                span Sync images
+
+
+        - if @packs.length > 0
+          - @packs.each_with_index do |pack, i|
+            tr
+              td
+                input.bulk-select type="checkbox" name="bulk_id" value=pack.id
+              td
+                a href=edit_admin_pack_path(id: pack.id)
+                  = pack.pack_code
+              td= pretty_date(pack.start_date, :month_year)
+              td data-timestamp=(pack.modified_at ? pack.modified_at.to_datetime.strftime('%Q') : false)
+              td data-timestamp=(pack.published_at ? pack.published_at.to_datetime.strftime('%Q') : false)
+              td
+                span.label class="label-#{status_class(pack.status)}" = status_human(pack.status)
+              td
+                .language-quality
+                  a.quality-load-link href=admin_pack_get_quality_path(pack_id: pack.id) Reveal
+
+
+        - else
+          tr
+            td colspan="7" No packs
+
+- elsif @pack_puzzles
+
+  .asset-thumbnails
+
+    - @pack_puzzles.each do |puzzle|
+      = render partial: 'grid_item', locals: {puzzle: puzzle, orderable: true}
+
+= render partial: 'admin/shared/positioner_form'
+
+- if @packs
+  = render partial: 'admin/shared/modal_sync'

@@ -1,0 +1,51 @@
+
+.row.packs-button-row
+  .col-sm-12
+    a.btn.btn-default type="button" href="#{new_admin_language_path}"
+      = "New Language"
+
+div
+  table.table.table-striped.table-hover
+    thead
+      tr
+        th Name
+        th Code
+
+    tbody
+      - if @languages.length > 0
+        - @languages.each_with_index do |language, i|
+          tr
+            td
+              a href=edit_admin_language_path(id: language.id) 
+                = language.name
+            td = language.code
+
+      - else
+        tr
+          td colspan="2" No languages
+
+
+div
+  table.table.table-striped.table-hover
+    thead
+      tr
+        th Name
+        th Value
+
+    tbody
+      tr
+        td
+          a href=admin_config_edit_path(parameter: 'quality_threshold_1') 
+            = 'Quality Threshold 1'
+        td = @config.quality_threshold_1
+      tr
+        td
+          a href=admin_config_edit_path(parameter: 'quality_threshold_2') 
+            = 'Quality Threshold 2'
+        td = @config.quality_threshold_2
+      tr
+        td
+          a href=admin_config_edit_path(parameter: 'image_quality') 
+            = 'Image Quality'
+        td = @config.image_quality
+

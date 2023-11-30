@@ -1,0 +1,43 @@
+- form = local_assigns.fetch :form, nil
+- upload_copy = local_assigns.fetch :upload_copy, ''
+- zoomable = local_assigns.fetch :zoomable, false
+
+.panel.panel-default.admin-panel.image-panel
+  
+  - if attachments.length > 1
+    .panel-heading
+      .btn-group
+        - attachments.each do |a|
+          - title = a[:title] ? a[:title] : a[:name]
+          - a[:styles].each_with_index do |style, index|
+            - name = "#{a[:name]}_#{style}"
+            button.btn.btn-default type="button" data-attachment="#{a[:name]}" data-variant="#{name}" tab-index="#{index+1}" =title
+  
+  .panel-body
+    - attachments.each do |a|
+      - a[:styles].each do |style|
+        - name = "#{a[:name]}_#{style}"
+        .image data-variant=name class=('zoomable' if zoomable)
+          - if image_panel.send(a[:name]).file?
+            = image_tag image_panel.send(a[:name], style)
+          - else
+            = "No image uploaded"
+
+          - if zoomable
+            .fa.fa-search-plus.zoom-button
+
+  - if form
+    .panel-footer
+      - attachments.each do |a|
+        - title = a[:title] ? a[:title].titleize : a[:name].titleize
+        - upload_copy = a[:upload_copy] ? a[:upload_copy] : ''
+        .upload data-attachment="#{a[:name]}"
+          = form.label a[:name].to_sym, image_panel.send(a[:name]).file? ? "Update #{title}#{upload_copy}" : "Upload #{title}#{upload_copy}"
+          .row 
+            .form-group.col-sm-6
+              = form.file_field a[:name].to_sym
+            - delete = "delete_#{a[:name]}".to_sym
+            - if image_panel.respond_to? delete
+              .form-group.col-sm-6
+                = form.check_box delete
+                = " Delete?"

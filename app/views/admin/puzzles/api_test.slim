@@ -1,0 +1,71 @@
+div.index-actions
+
+.row
+  .col-sm-6
+    .panel.panel-default.api-tester data-path="#{@api_host}/1/dailypuzzle.json" data-test="puzzles"
+
+      .panel-heading 
+        strong Daily Puzzles
+      
+      .panel-body
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="date" Date
+              input.form-control.datepicker type="text" name="datepicker"
+              input.form-control.date type="hidden" name="date"
+
+          .row
+
+            .form-group.col-sm-6
+              button.btn.btn-default.check-click Check
+
+
+  .col-sm-6
+    .panel.panel-default.results.hidden
+      .panel-body
+
+
+  .col-sm-6
+    .panel.panel-default.api-tester data-path="#{@api_host}/1/news.json" data-test="news"
+
+      .panel-heading 
+        strong News
+      
+      .panel-body
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="version" Version
+              input.form-control.version type="text" name="version"
+
+            .form-group.col-sm-6
+              label.control-label for="os" OS
+              select.form-control.platform name="platform"
+                option ios
+                option android
+                option kindle
+
+            .form-group.col-sm-6
+              button.btn.btn-default.check-click Check
+
+
+  .col-sm-6
+    .panel.panel-default.results.hidden
+      .panel-body
+
+
+.row
+  
+  .col-sm-6
+    .panel.panel-default.api-tester
+
+      .panel-heading 
+        strong Puzzle Packs
+      
+      .panel-body
+
+        .form-group.col-sm-6
+          a.btn.btn-default href="http:#{@api_host}/1/packs/list.json" target="_blank" Pack List JSON

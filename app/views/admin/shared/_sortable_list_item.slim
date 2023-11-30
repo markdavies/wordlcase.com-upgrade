@@ -1,0 +1,26 @@
+.sort-item.col-sm-3.col-md-2 data-id=item.id class="#{item.respond_to?('status') && !item.status ? 'grayed' : ''}"
+  
+  .thumbnail
+    .item-thumbnail
+      - thumbnail = thumbnail_template ? render(partial: thumbnail_template, locals: {item: item}) : image_tag(item.thumbnail_image)
+      = thumbnail
+
+    .caption
+      p.item-caption= item.send(name_field)
+
+      .btn-group
+
+        - if add_remove
+          a.btn.btn-default.remove-button type="button" href="#"
+            = "Remove"
+
+        - if item_edit_path
+          - href = item.new_record? ? item_edit_path : URI::decode(item_edit_path).gsub('[item_id]', item.id.to_s)
+        - elsif item_edit_method
+          - href = send(item_edit_method, item)
+        - else 
+          - href = false
+        
+        - if href
+          a.btn.btn-default.edit-button type="button" href=href
+            = "Edit"

@@ -1,0 +1,22 @@
+
+
+.margin-display-row{
+  
+  .col-sm-4{
+    position: relative;
+    text-align: center;
+  }
+
+  .margin-display{
+    position: relative;
+    height: 100px;
+    margin-bottom: 20px;
+
+    .margin-outer{
+      height: 95%;
+      border: 1px solid $ltgray;
+    }
+
+  }
+
+}

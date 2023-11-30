@@ -1,0 +1,164 @@
+
+= form_for [:admin, @pack], html: {}, url: @url do |f|
+
+  .row.form-actions
+    .col-md-8.pack-title
+
+      h2 
+        span = @pack.pack_code
+
+        .label class="label-#{status_class(@pack.status)}" = status_human(@pack.status)
+    
+    .col-md-4
+
+      .btn-group
+        - prev_url = prev_pack_url(@pack)
+        - next_url = next_pack_url(@pack)
+        a.btn.btn-default disabled=(!prev_url) href=prev_url = raw "&lt;"
+        a.btn.btn-default disabled=(!next_url) href=next_url = raw "&gt;"
+
+      .btn-group
+        = f.submit 'Save', class: 'btn btn-default'
+
+        button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+          span.caret
+          span.sr-only Toggle Dropdown
+        ul.dropdown-menu.pull-right role="menu"
+          li 
+            a.save-edit href="#" Save and Edit
+          li 
+            a href=admin_pack_relink_google_sheet_path(pack_id: @pack)
+              | Re-link to Google Sheets
+          li
+            a href="#{admin_packs_path}" Cancel
+          - unless @pack.new_record? 
+            li.divider
+            li= link_to 'Delete', admin_pack_path(id: @pack), method: :delete, data: { confirm: "Are you sure you want to delete this pack?" }
+
+  .row.pack-actions data-ping-url=admin_pack_ping_path(pack_id: @pack.id)
+    .col-md-12
+      .btn-group
+
+        - klass = @pack.is_publishable ? '' : 'disabled'
+        - title = @pack.status == Pack::STATUS_PUBLISHED ? 'Unpublish' : 'Publish'
+        - href = @pack.is_publishable ? admin_pack_toggle_published_path(pack_id: @pack.id) : '#'
+
+        a.btn.btn-default class=klass href=href
+          span = title
+
+
+        .btn-group
+          - href = @pack.data_processing ? '#' : admin_pack_import_data_path(pack_id: @pack.id)
+
+          - if !@pack.data_processing
+
+            button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown"
+              = image_tag 'icon-drive.png', size: "18x18"
+              = "Sync data "
+              span.caret
+              span.sr-only Toggle Dropdown
+            ul.dropdown-menu role="menu"
+              li
+                a href=href class="#{@pack.has_layouts ? 'confirm-action' : ''}" data-confirm-msg="This pack has layouts - really sync the data and destroy them?"
+                  = "Sync data"
+              li
+                a.selective-sync type="button" data-toggle="modal" data-target="#selective-sync-modal"
+                  = "Sync data (SELECTIVE)"
+
+          - else
+
+            .btn.btn-default class="disabled" data-ping="data_processing"
+              = image_tag 'icon-drive.png', size: "18x18"
+              = "Data syncing ..."
+
+
+        - klass = @pack.images_processing ? 'disabled' : ''
+        - title = @pack.images_processing ? 'Images syncing ...' : 'Sync images'
+        - href = @pack.data_processing ? '#' : admin_pack_import_images_path(pack_id: @pack.id)
+
+        a.btn.btn-default class=klass href=href data-ping="#{@pack.images_processing ? 'images_processing' : ''}"
+          = image_tag 'icon-dropbox.png', size: "18x18"
+          span = title
+
+        
+        - klass = @pack.parcel_processing || !@pack.pack_parcel.exists? ? 'disabled' : ''
+        - title = @pack.parcel_processing ? 'Published zip processing ...' : (@pack.pack_parcel.exists? ? 'Download published zip' : 'No published zip')
+        - href = !@pack.parcel_processing && @pack.pack_parcel.exists? ? @pack.pack_parcel(:original) : '#'
+
+        a.btn.btn-default class=klass href=href data-ping="#{@pack.parcel_processing ? 'parcel_processing' : ''}"
+          = image_tag 'icon-zip.png', size: "18x18"
+          span = title
+          
+        - klass = @pack.draft_parcel_processing || !@pack.draft_pack_parcel.exists? ? 'disabled' : ''
+        - title = @pack.draft_parcel_processing ? 'Draft zip processing ...' : (@pack.draft_pack_parcel.exists? ? 'Download draft zip' : 'No draft zip')
+        - href = !@pack.draft_parcel_processing && @pack.draft_pack_parcel.exists? ? @pack.draft_pack_parcel(:original) : '#'
+
+        a.btn.btn-default class=klass href=href data-ping="#{@pack.draft_parcel_processing ? 'draft_parcel_processing' : ''}"
+          = image_tag 'icon-zip.png', size: "18x18"
+          span = title
+
+        - klass = @pack.worksheet_url ? '' : 'disabled'
+        - href = @pack.worksheet_url ? @pack.worksheet_url : '#'
+        - target = @pack.worksheet_url ? '_blank' : '_self'
+        a.btn.btn-default class=klass href=href target=target
+          = image_tag 'icon-sheets.png', size: "18x18"
+          span View in Google Sheets
+
+        a.btn.btn-default.confirm-action data-confirm-msg="Really restore this pack from published?" href=admin_pack_restore_from_published_path(pack_id: @pack.id) Restore from published
+
+  .asset-thumbnails
+
+    - if @pack.pack_puzzles.length == 0 && @pack.orphaned_assets.length == 0
+      .col-sm-6 
+        p No puzzles yet
+
+    - @pack.pack_puzzles.each do |puzzle|
+      = render partial: 'grid_item', locals: {puzzle: puzzle, orderable: true}
+
+    - @pack.orphaned_assets.each do |puzzle_asset|
+
+      .puzzle-item
+
+        .panel.panel-default
+
+          .panel-heading 
+            = puzzle_asset.image_id
+            br
+            = puzzle_asset.id
+
+            .puzzle-actions
+              = link_to '', admin_delete_puzzle_asset_path(id: puzzle_asset.id), method: :delete, class: 'fa fa-trash-o', data: { confirm: "Are you sure you want to delete this asset?" }
+
+          .panel-body.row
+            .col-sm-6
+              .thumbnail.placeholder
+                img src=asset_path(puzzle_asset.image(:thumbnail))
+
+
+  .row.form-group
+    .col-sm-6
+      a type="button" class="btn btn-default" href="#{new_admin_puzzle_path(pack_id: @pack.id)}"
+        = "New Puzzle"
+
+  .row.form-group
+
+    .col-sm-3
+      = f.check_box :tested_primary
+      | &nbsp;&nbsp;&nbsp;&nbsp;
+      = f.label :tested_primary, 'Tested Primary Language', class: 'control-label'
+
+  .row.form-group
+    .col-sm-4
+      = f.label :extra_data, class: 'control-label'
+      = f.text_area :extra_data, class: 'form-control', rows: 6
+
+  - if @pack.is_daily || @pack.is_special
+    .row
+      .form-group.col-sm-4
+        = f.label :required_app_version, class: 'control-label'
+        = f.text_field :required_app_version, class: 'form-control'
+
+= render partial: 'admin/shared/modal_sync'
+
+
+

@@ -1,0 +1,189 @@
+div.index-actions
+
+.row
+  .col-sm-6
+    .panel.panel-default.api-tester data-path="#{@api_host_data}/1/daily_puzzle.json" data-test="dailypuzzle"
+
+      .panel-heading 
+        strong Daily Puzzle
+      
+      .panel-body
+
+          input.password type="hidden" name="password" value=ENV['REMOTE_ACCESS_PASSWORD']
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="date" Date
+              input.form-control.datepicker type="text" name="datepicker"
+              input.form-control.date type="hidden" name="date"
+
+          .row
+
+            .form-group.col-sm-6
+              button.btn.btn-default.check-click Check
+
+  .col-sm-6
+
+    ul.list-group
+
+      li.list-group-item  
+        h4 
+          | date
+          span.pull-right.badge string / required
+        p Date string in YYYY-MM-DD format
+
+      li.list-group-item  
+        h4 
+          | password
+          span.pull-right.badge string
+        p Secret admin password, if correct will show any date's puzzles regardless of the current date
+
+
+
+.row
+  .col-sm-6
+    .panel.panel-default.api-tester
+
+      .panel-heading 
+        strong Update Pack
+      
+      .panel-body
+
+        form action=admin_pack_remote_url target="_blank" method="post"
+
+          input.password type="hidden" name="password" value=ENV['REMOTE_ACCESS_PASSWORD']
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="pack_id" Pack ID
+              input.form-control type="text" name="pack_id"
+
+          .row
+
+            .form-group.col-sm-12
+              label.control-label for="puzzles" Puzzles
+              textarea.form-control name="puzzles" rows="5"
+
+          .row
+
+            .form-group.col-sm-6
+              button.btn.btn-default.check-click Check
+
+  .col-sm-6
+
+    ul.list-group
+
+      li.list-group-item  
+        h4 
+          | password
+          span.pull-right.badge string / required
+        p Secret admin password, if correct will show any date's puzzles regardless of the current date
+
+      li.list-group-item  
+        h4 
+          | pack_id
+          span.pull-right.badge string / required
+        p Pack ID string
+
+      li.list-group-item  
+        h4 
+          | puzzles
+          span.pull-right.badge string / required
+        p JSON string of puzzle data array
+
+
+
+
+.row
+  .col-sm-6
+    .panel.panel-default.api-tester
+
+      .panel-heading 
+        strong Update Pack Puzzle
+      
+      .panel-body
+
+        form action=admin_pack_puzzle_remote_url target="_blank" method="post"
+
+          input.password type="hidden" name="password" value=ENV['REMOTE_ACCESS_PASSWORD']
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="pack_id" Pack ID
+              input.form-control type="text" name="pack_id"
+
+          .row
+
+            .form-group.col-sm-6
+              label.control-label for="puzzle_index" Puzzle Index
+              input.form-control type="text" name="puzzle_index"
+
+          .row
+
+            .form-group.col-sm-12
+              label.control-label for="puzzle_data" Puzzle Data
+              textarea.form-control name="puzzle_data" rows="5"
+
+          .row
+
+            .form-group.col-sm-6
+              button.btn.btn-default.check-click Check
+
+  .col-sm-6
+
+    ul.list-group
+
+      li.list-group-item  
+        h4 
+          | password
+          span.pull-right.badge string / required
+        p Secret admin password, if correct will show any date's puzzles regardless of the current date
+
+      li.list-group-item  
+        h4 
+          | pack_id
+          span.pull-right.badge string / required
+        p Pack ID string
+
+      li.list-group-item  
+        h4 
+          | puzzle_index
+          span.pull-right.badge integer / required
+        p Zero-based index of puzzle in the pack to update
+
+      li.list-group-item
+        h4 
+          | puzzle_data
+          span.pull-right.badge string / required
+        p JSON string of puzzle data
+
+
+
+.row
+  .col-sm-6
+    .panel.panel-default.api-tester
+
+      .panel-heading 
+        strong Pack List
+      
+      .panel-body
+
+          .row
+
+            .form-group.col-sm-3
+              a.btn.btn-default.check-click target="_blank" href=pack_get_list_url(api_version: 1, format: :json) Check
+
+            .form-group.col-sm-3
+              a.btn.btn-default.check-click target="_blank" href=pack_get_list_chinese_url(api_version: 1, format: :json) Check Chinese
+
+  .col-sm-6
+
+    ul.list-group
+
+      li.list-group-item  
+        p No parameters
+
+

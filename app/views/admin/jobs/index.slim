@@ -1,0 +1,52 @@
+
+.jobs-index
+  table.table.table-striped.table-hover
+    thead
+      tr
+        th ID
+        th Pack
+        th Job
+        th Languages
+        th Status
+
+    tbody
+
+      - @jobs.each do |job|
+        - payload = job.payload_object
+
+        tr
+          td
+            = job.id
+
+          td
+            - if payload.args[0]
+              a href=edit_admin_pack_path(id: payload.args[0].id)
+                = payload.args[0].pack_code
+
+          td 
+            - if payload.object == ImageImporter
+              | Image sync
+
+            - elsif payload.object == DataImporter
+              = payload.args[1].titleize
+              |  data sync
+
+            - elsif payload.method_name == :refresh_zip
+              | Refresh zip
+
+            - elsif payload.method_name == :refresh_pack_puzzle_game_positions
+              | Refresh game positions
+
+          td
+            - if payload.object == DataImporter
+              = payload.args[2].join(', ')
+
+          td
+            - if job.attempts > 0
+              | Failed
+            
+            - elsif !job.locked_at.nil?
+              | Processing ...
+              
+            - else
+              | Pending

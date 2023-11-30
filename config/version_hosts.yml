@@ -1,0 +1,11 @@
+development:
+  data: 'data.wordlaces.local'
+  admin: 'admin.wordlaces.local'
+
+staging:
+  data: 'data.staging.wordlaces.com'
+  admin: 'admin.staging.wordlaces.com'
+
+production:
+  data: 'data.wordlaces.com'
+  admin: 'admin.wordlaces.com'

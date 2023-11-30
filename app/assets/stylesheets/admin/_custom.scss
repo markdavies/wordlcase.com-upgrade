@@ -1,0 +1,690 @@
+
+header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: black;
+  z-index: 100;
+}
+
+body{
+  margin-top: 83px;
+  @include transition(margin-top .25s ease-out);
+
+  &.show-bulk-action-row{
+    margin-top: 163px;
+  }
+
+  &.with-flash{
+    margin-top: 123px;
+  }
+
+  &.show-bulk-action-row.with-flash{
+    margin-top: 203px;
+  }
+
+}
+
+table.table {
+  margin-bottom: 100px;
+  td.actions {
+    min-width: 100px;
+    ul, li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    li{
+      display: inline-block;
+      margin-right: 10px;
+    }
+    a.disabled{
+      color: $mdgray;
+    }
+  }
+  th.short{
+    width: 12%;
+  }
+  .sortable{
+    .ui-sortable-placeholder{
+      height: 97px;
+    }
+    .ui-sortable-helper{
+      width: 500px;
+      background: white;
+    }
+  }
+  td span.fa{
+    font-size: 16px;
+  }
+}
+
+.grayed{
+  color: $mdgray;
+  .item-caption{
+    color: $mdgray;
+  }
+  &.sort-item{
+    opacity: .5;
+  }
+}
+
+.search-puzzles{
+  width: 100%;
+}
+
+.search-results{
+  margin-top: 50px;
+}
+
+.answers{
+  max-width: 400px;
+}
+
+.designed-by{
+  max-width: 150px;
+}
+
+.unique{
+  color: blue;
+}
+
+.alert{
+  color: red;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.asset-thumbnails{
+
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(100% + 10px);
+  margin-left: -5px;
+
+  &:not(.no-margin){
+    margin-top: 20px;
+  }
+
+  .puzzle-item{
+    width: 50%;
+    flex-basis: 50%;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+
+    @media only screen and (min-width: 768px) {
+      width: 25%;
+      flex-basis: 25%;
+    }
+
+    .panel{
+      height: 100%;
+      flex-basis: 100%;
+    }
+
+    .panel-heading{
+      position: relative;
+    }
+
+    .puzzle-actions{
+      position: absolute;
+      top: 3px;
+      right: 10px;
+      font-size: 16px;
+      margin: 5px;
+      text-align: right;
+
+      .ugc_multiselect{
+        display: none;
+      }
+
+      a, input{
+        margin-left: 10px;
+        color: black;
+      }
+
+    }
+
+  }
+
+  .thumbnail-image{
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .puzzle-info{
+    position: relative;
+    font-size: 12px;
+    color: black;
+    margin: 10px 7px 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .placeholder img{
+    opacity: .25;
+  }
+
+  .ugc-item{
+
+    .thumbnail .puzzle-info{
+
+      @include clearfix();
+
+      .info{
+
+        &.left,
+        &.right{
+          width: 50%;
+          float: left;
+        }
+
+        &.right{
+          text-align: right;
+        }
+
+        &.wide{
+          clear: both;
+          white-space: nowrap;
+        }
+
+      }
+
+    }
+
+    .thumbnail{
+      margin-bottom: 24px;
+    }
+
+    &.checked{
+
+      .thumbnail:after{
+        content: '';
+        pointer-events: none;
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        border: 4px solid #3497ff;
+        border-radius: 4px;
+      }
+
+    }
+
+  }
+
+  .invalid > .panel{
+    border: 3px solid red;
+    border-radius: 7px;
+  }
+
+}
+
+
+
+.language-quality{
+  flex-grow: 1;
+  text-align: right;
+  display: flex;
+  margin: 3px 0;
+  line-height: 15px;
+  flex-wrap: wrap;
+  
+  > *{
+    margin: 0 2px 2px 0;
+  }
+
+  .label{
+    line-height: 13px;
+  }
+
+}
+
+.asset-modal{
+  
+  .modal-dialog{
+    width: 60%;
+  }
+
+  img{
+    width: 100%;
+    height: auto;
+  }
+
+}
+
+.slider-handle{
+  background-color: #000;
+  background-image: -webkit-linear-gradient(top, #000 0, #000 100%);
+}
+
+
+#move-puzzle-modal{
+
+  .action, 
+  .target,
+  .submit{
+    display: none;
+  }
+
+  &.pack-chosen .action{
+    display: block;
+  }
+
+  &.action-chosen .target{
+    display: block;
+  }
+
+  &.target-chosen .submit{
+    display: block;
+  }
+
+}
+
+
+.puzzle-queries{
+
+  .actions{
+
+    li{
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 16px;
+    }
+
+    a{
+      color: black;
+    }
+
+  }
+
+  .template, .destroy{
+    display: none;
+  }
+
+}
+
+.puzzle-query-selector{
+  .dropdown-toggle span{
+    display: inline-block;
+    margin: 0 2px;
+  }
+}
+
+
+.ugc-table{
+
+  .ugc-item{
+
+    td{
+      vertical-align: top !important;
+    }
+
+    td, th{
+
+      max-width: 10%;
+
+      &.clue-col{
+        width: 10%;
+      }
+
+      &.answers-col{
+        width: 30%;
+        max-width: 30%;
+      }
+
+      &.image-col{
+        max-width: 10%;
+
+        img{
+          width: 100%;
+          height: auto;
+        }
+      }
+
+    }
+
+    &.puzzle-disabled{
+      td,
+      .thumbnail{
+        opacity: .2 !important;
+      }
+    }
+
+    &.puzzle-private .code-column{
+      opacity: .5;
+    }
+
+    &.report-alert{
+      td,
+      .thumbnail{
+        background-color: rgba(255, 0, 0, .25) !important;
+      }
+    }
+
+    &.appropriate-report-alert{
+      td,
+      .thumbnail{
+        background-color: rgba(226, 191, 0, 1) !important;
+      }
+    }
+
+  }
+
+}
+
+.ugc-table, .pq-table, .ug-table{
+  tr td.calling-app-icon{
+
+    width: 80px;
+
+    img{
+      width: 20px;
+      height: auto;
+      margin-right: 10px;
+
+    }
+
+  }
+}
+
+.news-table{
+
+  tr{
+
+    &.live td{
+      background-color: #d6fbe9 !important;
+    }
+
+  }
+
+}
+
+.news-form{
+
+  #edit-cta-puzzle-validation{
+
+    .valid,
+    .invalid{
+      display: none;
+      font-size: 20px;
+      line-height: 35px;
+    }
+
+    .valid{
+      color: $green;
+    }
+
+    .invalid{
+      color: $red;
+    }
+
+    &.valid .valid{
+      display: block;
+    }
+
+    &.invalid .invalid{
+      display: block;
+    }
+
+  }
+
+}
+
+.packs-search-row{
+
+  margin-top: 100px;
+
+}
+
+.packs-button-row{
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  > :last-child{
+    text-align: right;
+
+    .btn-group{
+      margin-left: 10px;
+    }
+  }
+
+}
+
+.user-submitted-filter{
+
+  .more-options-fields{
+    display: none;
+  }
+
+  .search-more-options{
+    text-align: right;
+    margin: 0 0 10px 0;
+    
+    a{
+      color: black;
+    }
+    .fewer{
+      display: none;
+    }
+  }
+
+  &.more-options{
+
+    .more-options-fields{
+      display: block;
+    }
+
+    .fewer{
+      display: block;
+    }
+
+    .more{
+      display: none;
+    }
+
+  }
+
+  .search-buttons{
+    a, button{
+      float: right;
+      margin-left: 10px;
+    }
+  }
+
+}
+
+.generate-csv{
+  margin-left: 10px;
+}
+
+
+.rating-input-group{
+  padding: 8px 10px 8px 0;
+
+  .weight-input{
+    width: 70px;
+  }
+
+  .input-group-btn{
+    display: inline-block;
+  }
+
+}
+
+.moderate-others-input-group{
+
+  padding: 8px 10px 8px 15px;
+
+  input{
+    margin-right: 7px;
+  }
+
+}
+
+
+.tags{
+
+  .btn{
+    margin: 0 10px 10px 0;
+  }
+
+  .hint{
+    color: #ccc;
+  }
+
+  .added{
+
+    .fa{
+      width: 0;
+      opacity: 0;
+    }
+
+    &:hover .fa{
+      width: 10px;
+      opacity: 1;
+    }
+  }
+
+}
+
+.btn-faded{
+  opacity: .5;
+}
+
+.btn-ok{
+  text-align: right;
+}
+
+.highlight{
+  background-color: #fefbb0;
+  padding: 6px 0 4px 0;
+  border-radius: 4px;
+}
+
+.from-to-row:after{
+  content: '-';
+  position: absolute;
+  left: 50%;
+  line-height: 34px;
+  margin-left: -3px;
+}
+
+
+.asset-large-view{
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 100;
+
+  &.showing{
+    left: 0;
+  }
+
+  &.loaded{
+
+    .loading{
+      display: none;
+    }
+
+    img{
+      position: relative;
+      left: 0;
+    }
+
+  }
+
+  img{
+    width: 75%;
+    max-width: 800px;
+    position: absolute;
+    left: -9999px;
+  }
+}
+
+.off{
+  opacity: .2;
+}
+
+.tab-content{
+  padding: 15px 0;
+}
+
+.nav-content > li.active > a{
+  background-color: $ltgray;
+}
+
+.tab-pane:not(.active){
+  display: none;
+}
+
+.form-actions{
+  margin-top: 50px;
+}
+
+.pack-title{
+  text-align: left;
+
+  .label{
+    margin-left: 10px;
+  }
+
+  h2{
+    margin-top: 0;
+  }
+}
+
+.pack-actions{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-default{
+  img{
+    margin-right: 5px;
+  }
+}
+
+.bulk-create-packs a{
+  text-align: left;
+}
+
+.quality-label{
+  display: flex;
+  align-items: center;
+
+  span{
+    margin-left: 5px;
+  }
+
+}
+
+.caption-row{
+  margin-top: 5px;
+}
+
+.label-custom-pink{
+  background-color: hotpink;
+}
+
+.bulk-actions{
+  display: none;
+
+  &.reveal{
+    display: table-cell;
+  }
+}
+
