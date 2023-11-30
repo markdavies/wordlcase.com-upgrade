@@ -1,5 +1,5 @@
 module AdminHelper
-  require 'fog'
+  require 'fog/aws'
 
   def pretty_date date, format=:full_date
 

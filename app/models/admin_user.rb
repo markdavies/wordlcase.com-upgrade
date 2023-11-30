@@ -1,7 +1,6 @@
 class AdminUser < ActiveRecord::Base
 
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   validates_presence_of :auth_level
 
