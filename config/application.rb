@@ -14,14 +14,23 @@ module WordlacesComUpgrade
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w(assets tasks))
+    # config.autoload_lib(ignore: %w(assets tasks))
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    config.assets.precompile += [ 'wordpuzzle.js', 'wordpuzzle.css' ]
+
+    config.autoload_paths << Rails.root.join('lib')
+    config.autoload_paths << Rails.root.join('app', 'lib')
+
+    config.version_hosts = YAML.load_file(Rails.root.join('config', 'version_hosts.yml'))
+
+    Rails.application.config.version_hosts[Rails.env].values.each do |host|
+      config.hosts << host
+    end
+
+    config.active_job.queue_adapter = :delayed_job
+
+    config.encoding = "utf-8"
+
+    config.action_mailer.default_url_options = { host: 'wordlaces.com' }
   end
 end

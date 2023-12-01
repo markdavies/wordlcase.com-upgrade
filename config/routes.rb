@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     post 'positions' => 'application#set_positions', as: :set_positions
 
     resources :puzzles, :path => 'puzzles/pack', except: [:index]
-    delete 'puzzles/puzzle_asset/:id' => 'puzzles#delete_puzzle_asset', :path => 'puzzles/puzzle_asset', as: :delete_puzzle_asset
+    delete 'puzzles/puzzle_asset/:id', to: 'puzzles#delete_puzzle_asset', as: :delete_puzzle_asset # check this
 
     resources :languages, except: [:index]
     get 'config' => 'config#index', as: :config

@@ -1,8 +1,8 @@
 class Admin::ConfigController < Admin::ApplicationController
 
-  before_filter :admin_auth_level_only!
-  before_filter :get_config
-  before_filter :get_parameter, except: [:index]
+  before_action :admin_auth_level_only!
+  before_action :get_config
+  before_action :get_parameter, except: [:index]
 
   def index
     @languages = Language.all

@@ -16,7 +16,7 @@ nav.main {
   .navbar-brand {
     position: relative;
     font-size: 14px;
-    color: $ltgray;
+    color: var(--ltgray);
     padding-left: 55px;
     img{
       position: absolute;
@@ -25,45 +25,45 @@ nav.main {
       width: 30px;
     }
     &:hover {
-      color: $ltgray;
+      color: var(--ltgray);
     }
   }
   ul.nav li {
     a {
-      color: $mdgray;
+      color: var(--mdgray);
     }
     
     &:hover {
       a {
-        color: $ltgray;
+        color: var(--ltgray);
       }      
     }
     &.active {
       a {
-        color: $ltgray;
-        background-color: $dkgray;
+        color: var(--ltgray);
+        background-color: var(--dkgray);
         &:hover {
-          background-color: $dkgray;
-          color: $ltgray;
+          background-color: var(--dkgray);
+          color: var(--ltgray);
         }
       }      
     }
     &.dropdown {
       &.open {
         a, ul {
-          color: $ltgray;
-          background-color: $dkgray;
+          color: var(--ltgray);
+          background-color: var(--dkgray);
         }        
         .dropdown-menu {
           a {
-            color: $mdgray;
+            color: var(--mdgray);
             &:hover {
-              color: $ltgray;
+              color: var(--ltgray);
             }
           }          
           li.active {
             a {
-              color: $ltgray;
+              color: var(--ltgray);
             }
           }
         }
@@ -73,19 +73,19 @@ nav.main {
 }
 
 .dropdown-menu a.disabled{
-  color: $mdgray;
+  color: var(--mdgray);
   &:hover {
-    color: $mdgray;
+    color: var(--mdgray);
   }
 }
 
 #breadcrumb, #outputinfo {
-  background-color: $dkgray;
+  background-color: var(--dkgray);
   .breadcrumb, .info {
-    background-color: $dkgray;  
+    background-color: var(--dkgray) ;
     margin-bottom: 0;
     padding: 8px 0;
-    color: $mdgray;
+    color: var(--mdgray);
     font-size: 12px;
     &:empty {
       padding: 0;
@@ -94,7 +94,7 @@ nav.main {
       padding: 0 5px 0 10px;
     }
     a {
-      color: $ltgray;
+      color: var(--ltgray);
     }
   }
 }
@@ -208,34 +208,32 @@ td {
   text-align: center;
   li {
     a { 
-      color: $dkgray;
+      color: var(--dkgray);
     }     
     &:hover {
       a {
-        color: $dkgray;
+        color: var(--dkgray);
       }
     }
     &.active {
       a {
-        background-color: $dkgray;
-        border-color: $dkgray;
+        background-color: var(--dkgray);
+        border-color: var(--dkgray);
       }
     }
   }  
 }
 
-header {}
-
 footer {
   width: 100%;
-  color: $ltgray;
+  color: var(--ltgray);
   padding: 20px 0;
   z-index: 2;  
 }
 
 .copyright {
   font-size: 11px;
-  color: $mdgray;
+  color: var(--mdgray);
 }
 
 /* Bootstrap */
@@ -260,12 +258,12 @@ footer {
 }
 
 .navbar-default .navbar-toggle {
-  border-color: $mdgray;
+  border-color: var(--mdgray);
   &:hover, &:focus {
     background-color: transparent;
   }
   .icon-bar {
-    border-color: $mdgray;
+    border-color: var(--mdgray);
   }
 }
 
@@ -283,7 +281,7 @@ footer {
       font-size: 40px;
       margin-top: -5px;
       text-align: center;
-      @include transition(opacity .25s);
+      transition: opacity .25s;
     }
 
     .panel-body{
@@ -419,9 +417,9 @@ footer {
 
   .st-block-controls__top {
      a {
-       color: $dkgray;
+       color: var(--dkgray);
        &:hover {
-         color: $green;
+         color: var(--green);
        }
      }   
   }
@@ -482,7 +480,7 @@ footer {
 /* unveil */
 
 img{
-  @include transition(opacity .25s);
+  transition: opacity .25s;
 
   &.unveil{
     opacity: 0;
@@ -491,6 +489,6 @@ img{
 }
 
 .quality-load-link{
-  color: $mdgray;
+  color: var(--mdgray);
   text-decoration: underline;
 }

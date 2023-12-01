@@ -2,12 +2,12 @@ class Admin::PacksController < Admin::ApplicationController
   include UrlHelper
   include AdminHelper
 
-  before_filter :admin_auth_level_only!
-  before_filter :set_parent_breadcrumb
-  before_filter :get_multi_ids, only: [:multi_import_images, :multi_toggle_published, :multi_import_data]
-  after_filter :flash_notice, :only => [:update, :create]
-  after_filter :refresh_pack_zip, :only => [:update, :create, :destroy, :do_refresh_pack_zip]
-  after_filter :refresh_game_positions, :only => [:update, :create, :destroy]
+  before_action :admin_auth_level_only!
+  before_action :set_parent_breadcrumb
+  before_action :get_multi_ids, only: [:multi_import_images, :multi_toggle_published, :multi_import_data]
+  after_action :flash_notice, :only => [:update, :create]
+  after_action :refresh_pack_zip, :only => [:update, :create, :destroy, :do_refresh_pack_zip]
+  after_action :refresh_game_positions, :only => [:update, :create, :destroy]
 
   def index
     @packs = Pack.filter params[:filter]

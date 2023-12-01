@@ -10,7 +10,7 @@ header{
 
 body{
   margin-top: 83px;
-  @include transition(margin-top .25s ease-out);
+  transition: margin-top .25s ease-out;
 
   &.show-bulk-action-row{
     margin-top: 163px;
@@ -40,7 +40,7 @@ table.table {
       margin-right: 10px;
     }
     a.disabled{
-      color: $mdgray;
+      color: var(--mdgray);
     }
   }
   th.short{
@@ -61,9 +61,9 @@ table.table {
 }
 
 .grayed{
-  color: $mdgray;
+  color: var(--mdgray);
   .item-caption{
-    color: $mdgray;
+    color: var(--mdgray);
   }
   &.sort-item{
     opacity: .5;
@@ -418,11 +418,11 @@ table.table {
     }
 
     .valid{
-      color: $green;
+      color: var(--green);
     }
 
     .invalid{
-      color: $red;
+      color: var(--red);
     }
 
     &.valid .valid{
@@ -624,7 +624,7 @@ table.table {
 }
 
 .nav-content > li.active > a{
-  background-color: $ltgray;
+  background-color: var(--ltgray);
 }
 
 .tab-pane:not(.active){

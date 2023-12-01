@@ -4,12 +4,12 @@ class Admin::PuzzlesController < Admin::ApplicationController
 
   include AdminHelper
 
-  before_filter :admin_auth_level_only!
-  before_filter :authenticate_admin_user!, except: [:create_remote, :create_remote_and_remove_extras]
-  before_filter :add_title_breadcrumb, except: [:daily, :search]
+  before_action :admin_auth_level_only!
+  before_action :authenticate_admin_user!, except: [:create_remote, :create_remote_and_remove_extras]
+  before_action :add_title_breadcrumb, except: [:daily, :search]
 
-  after_filter :refresh_pack_zip, :only => [:update, :create, :destroy, :create_remote, :create_remote_and_remove_extras, :create_remote_puzzle]
-  after_filter :refresh_game_positions, :only => [:update, :create, :destroy, :create_remote, :create_remote_and_remove_extras, :create_remote_puzzle]
+  after_action :refresh_pack_zip, :only => [:update, :create, :destroy, :create_remote, :create_remote_and_remove_extras, :create_remote_puzzle]
+  after_action :refresh_game_positions, :only => [:update, :create, :destroy, :create_remote, :create_remote_and_remove_extras, :create_remote_puzzle]
 
   protect_from_forgery with: :null_session, only: [:create_remote, :create_remote_and_remove_extras]
 
