@@ -1782,8 +1782,6 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    newrelic_rpm (9.6.0)
-      base64
     nio4r (2.6.1)
     nokogiri (1.15.5-arm64-darwin)
       racc (~> 1.4)
@@ -1961,7 +1959,6 @@ DEPENDENCIES
   koala
   mailchimp-api
   mini_magick
-  newrelic_rpm
   omniauth
   omniauth-twitter
   paperclip

@@ -58,7 +58,7 @@ class Pack < ActiveRecord::Base
 
   scope :oldest, -> { reorder('pack_code desc') }
 
-  scope :filter, lambda { |filters|
+  scope :filtered, lambda { |filters|
 
     filters = [filters] if !filters.kind_of?(Array)
 
@@ -434,7 +434,7 @@ class Pack < ActiveRecord::Base
 
   def position
     
-    packs = Pack.filter(self.pack_type).select('packs.*, (select count(*) from pack_puzzles where pack_puzzles.pack_id = packs.id) as pack_puzzles_count')
+    packs = Pack.filtered(self.pack_type).select('packs.*, (select count(*) from pack_puzzles where pack_puzzles.pack_id = packs.id) as pack_puzzles_count')
 
     pack_index = packs.collect(&:id).index(self.id)
     return 0 if pack_index == 0

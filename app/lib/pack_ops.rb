@@ -129,7 +129,7 @@ module PackOps
 
   def self.bulk_create_packs type, number
 
-    packs = Pack.filter type
+    packs = Pack.filtered type
     pack_codes = []
 
     if type == Pack::TYPE_DAILY || type == Pack::TYPE_SPECIAL
@@ -173,7 +173,7 @@ module PackOps
 
   def self.get_adjacent_pack pack, direction
 
-    packs = Pack.filter pack.pack_type
+    packs = Pack.filtered pack.pack_type
     i = packs.find_index do |p|
       p.pack_code == pack.pack_code
     end
@@ -209,7 +209,7 @@ module PackOps
   def self.get_words_and_captions_for_lang lang_code, pack_type = nil
 
     if !pack_type.nil?
-      packs = Pack.filter(pack_type)
+      packs = Pack.filtered(pack_type)
       puzzles = packs.collect(&:pack_puzzles).flatten
     else
       puzzles = PackPuzzle.all.reorder('game_position asc')
@@ -253,7 +253,7 @@ module PackOps
     w_assets = 20
     h_assets = 20
 
-    packs = Pack.filter(pack_type)
+    packs = Pack.filtered(pack_type)
 
     if pack_type == Pack::TYPE_DAILY
 

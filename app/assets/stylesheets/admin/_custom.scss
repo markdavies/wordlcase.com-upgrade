@@ -174,7 +174,9 @@ table.table {
 
     .thumbnail .puzzle-info{
 
-      @include clearfix();
+      clear: both;
+      content: "";
+      display: block;
 
       .info{
 

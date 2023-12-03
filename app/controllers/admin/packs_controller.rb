@@ -6,11 +6,11 @@ class Admin::PacksController < Admin::ApplicationController
   before_action :set_parent_breadcrumb
   before_action :get_multi_ids, only: [:multi_import_images, :multi_toggle_published, :multi_import_data]
   after_action :flash_notice, :only => [:update, :create]
-  after_action :refresh_pack_zip, :only => [:update, :create, :destroy, :do_refresh_pack_zip]
+  after_action :refresh_pack_zip, :only => [:update, :create, :destroy]
   after_action :refresh_game_positions, :only => [:update, :create, :destroy]
 
   def index
-    @packs = Pack.filter params[:filter]
+    @packs = Pack.filtered params[:filter]
     @invalid_packs = Pack.invalid
     get_languages
     get_cookies

@@ -17,7 +17,7 @@ module Positioner
 
       class_eval do
 
-        after_save "set_#{singular}_positions"
+        after_save "set_#{singular}_positions".to_sym
 
         define_method("set_#{singular}_positions") do
           

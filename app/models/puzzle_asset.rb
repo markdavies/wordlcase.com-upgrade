@@ -1,7 +1,5 @@
 class PuzzleAsset < ActiveRecord::Base
 
-  include Assets
-
   belongs_to :pack
 
   validates_presence_of :pack_id
