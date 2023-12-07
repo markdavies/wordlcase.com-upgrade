@@ -2,6 +2,8 @@ require_relative "boot"
 
 require "rails/all"
 
+require "active_storage/engine"
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -32,5 +34,8 @@ module WordlacesComUpgrade
     config.encoding = "utf-8"
 
     config.action_mailer.default_url_options = { host: 'wordlaces.com' }
+
+    config.active_storage.variant_processor = :mini_magick
+    
   end
 end

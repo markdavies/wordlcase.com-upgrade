@@ -22,33 +22,35 @@ class Pack < ActiveRecord::Base
     path = ':rails_root/public/:url'
   end
   
+  has_one_attached :pack_parcel
+  has_one_attached :draft_pack_parcel
 
-  has_attached_file :pack_parcel,
-  s3_headers: {'Cache-Control' => 'max-age=600'},
-  url: url,
-  path: path
+  # has_attached_file :pack_parcel,
+  # s3_headers: {'Cache-Control' => 'max-age=600'},
+  # url: url,
+  # path: path
 
-  validates_attachment_content_type :pack_parcel, 
-  content_type: [ 'application/zip', 'application/octet-stream' ], 
-  message: 'is invalid. Only zips permitted'
+  # validates_attachment_content_type :pack_parcel, 
+  # content_type: [ 'application/zip', 'application/octet-stream' ], 
+  # message: 'is invalid. Only zips permitted'
 
-  validates_attachment_size :pack_parcel,
-  in: 0..20.megabytes,
-  message: 'is too large. Should be no larger than 20MB'
+  # validates_attachment_size :pack_parcel,
+  # in: 0..20.megabytes,
+  # message: 'is too large. Should be no larger than 20MB'
   
 
-  has_attached_file :draft_pack_parcel,
-  s3_headers: {'Cache-Control' => 'max-age=600'},
-  url: url,
-  path: path
+  # has_attached_file :draft_pack_parcel,
+  # s3_headers: {'Cache-Control' => 'max-age=600'},
+  # url: url,
+  # path: path
 
-  validates_attachment_content_type :draft_pack_parcel, 
-  content_type: [ 'application/zip', 'application/octet-stream' ], 
-  message: 'is invalid. Only zips permitted'
+  # validates_attachment_content_type :draft_pack_parcel, 
+  # content_type: [ 'application/zip', 'application/octet-stream' ], 
+  # message: 'is invalid. Only zips permitted'
 
-  validates_attachment_size :draft_pack_parcel,
-  in: 0..20.megabytes,
-  message: 'is too large. Should be no larger than 20MB'
+  # validates_attachment_size :draft_pack_parcel,
+  # in: 0..20.megabytes,
+  # message: 'is too large. Should be no larger than 20MB'
 
 
   validates_uniqueness_of :pack_code

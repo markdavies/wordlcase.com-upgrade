@@ -26,8 +26,10 @@ module ImageImporter
                     image = open(tmp_path)
 
                     puzzle_asset = PuzzleAsset.find_or_create_by(pack_id: pack.id, image_id: image_id)
-                    puzzle_asset.image = image
+                    puzzle_asset.image.attach(io: image, filename: entry.name)
                     puzzle_asset.save!
+
+                    puts puzzle_asset.inspect
 
                     image.close
 

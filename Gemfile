@@ -9,7 +9,6 @@ gem 'sass-rails'
 gem 'slim'
 gem 'bourbon'
 gem 'jquery-rails'
-gem 'kt-paperclip'
 gem 'devise'
 gem 'breadcrumbs_on_rails'
 gem 'kaminari'
@@ -29,6 +28,7 @@ gem 'koala'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'twitter'
+gem 'image_processing'
 gem "bootsnap", require: false
 
 group :development do

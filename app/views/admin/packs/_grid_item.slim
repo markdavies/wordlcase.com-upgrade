@@ -24,7 +24,7 @@
         .col-sm-6
 
           - if puzzle.puzzle_asset && !puzzle.puzzle_asset.image_reprocessing
-            img.thumbnail-image.unveil src=asset_url('transparent.gif') data-src=asset_path(puzzle.puzzle_asset.image(:medium_thumbnail))
+            = image_tag puzzle.puzzle_asset.image.variant(resize_to_limit: [100, 100])
           - else
             img.thumbnail-image src=asset_path('transparent.gif')
 

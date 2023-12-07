@@ -1,24 +1,11 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- puzzle_asset -> check_image_reprocess
+- remove paperclip initializer
+- image_importer commeted begin rescue
 
-Things you may want to cover:
+Old paperclips:
+- AppConfig puzzle_sheets - is this used?
+- Pack - pack_parcel & draft_pack_parcel
+- Puzzle Asset Sheet - image
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...

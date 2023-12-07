@@ -11,17 +11,17 @@ class PuzzleAssetSheet < ActiveRecord::Base
     end
       
 
-    has_attached_file :image,
-        url: url,
-        path: path
+    # has_attached_file :image,
+    #     url: url,
+    #     path: path
 
-    validates_attachment_content_type :image, 
-        content_type: [ 'image/jpg', 'image/jpeg' ], 
-        message: 'is invalid. Only jpg format is permitted'
+    # validates_attachment_content_type :image, 
+    #     content_type: [ 'image/jpg', 'image/jpeg' ], 
+    #     message: 'is invalid. Only jpg format is permitted'
 
-    validates_attachment_size :image,
-        in: 0..5.megabytes,
-        message: 'is too large. Should be no larger than 5MB'
+    # validates_attachment_size :image,
+    #     in: 0..5.megabytes,
+    #     message: 'is too large. Should be no larger than 5MB'
 
 
     def style_file_name attachment, style

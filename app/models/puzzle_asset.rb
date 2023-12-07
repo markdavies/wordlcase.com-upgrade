@@ -6,15 +6,16 @@ class PuzzleAsset < ActiveRecord::Base
 
   before_save :downcase_image_id
 
-  has_attached_file :image, styles: lambda { |att| att.instance.get_convert_sizes }
+  # has_attached_file :image, styles: lambda { |att| att.instance.get_convert_sizes }
 
-  validates_attachment_content_type :image, 
-  content_type: [ 'image/jpg', 'image/jpeg' ], 
-  message: 'is invalid. Only jpg format is permitted'
+  # validates_attachment_content_type :image, 
+  # content_type: [ 'image/jpg', 'image/jpeg' ], 
+  # message: 'is invalid. Only jpg format is permitted'
 
-  validates_attachment_size :image,
-  in: 0..10.megabytes,
-  message: 'is too large. Should be no larger than 10MB'
+  # validates_attachment_size :image,
+  # in: 0..10.megabytes,
+  # message: 'is too large. Should be no larger than 10MB'
+  has_one_attached :image
 
   before_save :check_image_reprocess
 
@@ -69,23 +70,23 @@ class PuzzleAsset < ActiveRecord::Base
 
   def check_image_reprocess
     
-    if (image_slug_changed? && image.present? && !image_updated_at_changed?)
+    # if (image_slug_changed? && image.present? && !image_updated_at_changed?)
 
-      p = self.class.find(id)
-      old_keys = p.image.styles.keys.collect do |style|
-        p.image.path(style)
-      end
+    #   p = self.class.find(id)
+    #   old_keys = p.image.styles.keys.collect do |style|
+    #     p.image.path(style)
+    #   end
 
-      self.delay.reprocess_image
-      self.update_column(:image_reprocessing, true)
+    #   self.delay.reprocess_image
+    #   self.update_column(:image_reprocessing, true)
 
-      if ENV['FOG_DIRECTORY']
-        s3 = get_s3
-        s3.delete_multiple_objects ENV['FOG_DIRECTORY'], old_keys
+    #   if ENV['FOG_DIRECTORY']
+    #     s3 = get_s3
+    #     s3.delete_multiple_objects ENV['FOG_DIRECTORY'], old_keys
 
-      end
+    #   end
 
-    end
+    # end
 
   end
 
