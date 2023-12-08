@@ -34,50 +34,38 @@ module PackOps
 
   def self.add_images_to_zip_output_stream zos, pack_code, puzzle_assets, use_prefix = false
 
+    service = Rails.application.config.active_storage.service
     keys = []
 
     puzzle_assets.reject(&:nil?).each do |puzzle_asset|
 
-      ext = File.extname(puzzle_asset.image_file_name)
+      if puzzle_asset.image.attached?
+        ext = puzzle_asset.image.blob.filename.extension_with_delimiter
+        prefix = ''
+        prefix = use_prefix ? 'parcels/' : ''
+        folder = 'images/'
+        filename = puzzle_asset.image_id
 
-      types = [:large]
+        entry_key = "#{prefix}#{pack_code}/#{folder}#{filename}#{ext}"
 
-      types.each do |style|
+        if !keys.include?(entry_key)
 
-        if puzzle_asset.image.exists?(style)
+          zos.put_next_entry(entry_key)
 
-          prefix = ''
-          image_prefix = ''
+          keys << entry_key
+          processed = puzzle_asset.image.variant(resize_to_limit: [768, 768]).processed
 
-          case style
-          when :small_thumbnail, :medium_thumbnail, :medium_lg_thumbnail, :large_thumbnail
-            image_prefix = 'thumb_'
-          end
-
-          prefix = use_prefix ? 'parcels/' : ''
-          folder = 'images/'
-          filename = puzzle_asset.image_id
-
-          entry_key = "#{prefix}#{pack_code}/#{folder}#{image_prefix}#{filename}#{ext}"
-
-          if !keys.include?(entry_key)
-
-            zos.put_next_entry(entry_key)
-
-            keys << entry_key
-
-            if puzzle_asset.image.options[:storage] == :filesystem
-              zos.print File.read(puzzle_asset.image.path(style))
-            else
-              zos.print URI.parse(puzzle_asset.image(style)).read
-            end
-
+          if service == :local
+            zos.print processed.service.download(processed.key)
+          else
+            url = Rails.application.routes.url_helpers.rails_representation_url(processed.processed)
+            zos.print URI.parse(url).read
           end
 
         end
 
       end
-
+    
     end
 
   end
@@ -113,11 +101,13 @@ module PackOps
 
     end
 
+    filename = published ? "#{pack.pack_code}.zip" : "draft_#{pack.pack_code}.zip"
+
     if published
-      pack.pack_parcel = File.open(tmp_zip)
+      pack.pack_parcel.attach(io: File.open(tmp_zip), filename: filename)
       pack.parcel_processing = false
     else
-      pack.draft_pack_parcel = File.open(tmp_zip)
+      pack.draft_pack_parcel.attach(io: File.open(tmp_zip), filename: filename)
       pack.draft_parcel_processing = false
     end
 

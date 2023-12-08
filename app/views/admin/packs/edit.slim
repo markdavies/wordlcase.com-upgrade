@@ -88,10 +88,11 @@
         a.btn.btn-default class=klass href=href data-ping="#{@pack.parcel_processing ? 'parcel_processing' : ''}"
           = image_tag 'icon-zip.png', size: "18x18"
           span = title
-          
-        - klass = @pack.draft_parcel_processing || !@pack.draft_pack_parcel.exists? ? 'disabled' : ''
-        - title = @pack.draft_parcel_processing ? 'Draft zip processing ...' : (@pack.draft_pack_parcel.exists? ? 'Download draft zip' : 'No draft zip')
-        - href = !@pack.draft_parcel_processing && @pack.draft_pack_parcel.exists? ? @pack.draft_pack_parcel(:original) : '#'
+        
+        - attached = @pack.draft_pack_parcel.attached?
+        - klass = @pack.draft_parcel_processing || !attached ? 'disabled' : ''
+        - title = @pack.draft_parcel_processing ? 'Draft zip processing ...' : (attached ? 'Download draft zip' : 'No draft zip')
+        - href = !@pack.draft_parcel_processing && attached ? rails_storage_proxy_url(@pack.draft_pack_parcel) : '#'
 
         a.btn.btn-default class=klass href=href data-ping="#{@pack.draft_parcel_processing ? 'draft_parcel_processing' : ''}"
           = image_tag 'icon-zip.png', size: "18x18"

@@ -1,7 +1,7 @@
 class Admin::PacksController < Admin::ApplicationController
   include UrlHelper
   include AdminHelper
-
+  
   before_action :admin_auth_level_only!
   before_action :set_parent_breadcrumb
   before_action :get_multi_ids, only: [:multi_import_images, :multi_toggle_published, :multi_import_data]

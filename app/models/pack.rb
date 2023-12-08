@@ -14,13 +14,13 @@ class Pack < ActiveRecord::Base
   after_create :update_modified_at_time
   before_save :get_status
   
-  if ENV['FOG_DIRECTORY']
-    url = "#{Rails.env}/packs/:style_file_name.:extension"
-    path = "#{Rails.env}/packs/:style_file_name.:extension"
-  else
-    url = '/static/packs/:style_file_name.:extension'
-    path = ':rails_root/public/:url'
-  end
+  # if ENV['FOG_DIRECTORY']
+  #   url = "#{Rails.env}/packs/:style_file_name.:extension"
+  #   path = "#{Rails.env}/packs/:style_file_name.:extension"
+  # else
+  #   url = '/static/packs/:style_file_name.:extension'
+  #   path = ':rails_root/public/:url'
+  # end
   
   has_one_attached :pack_parcel
   has_one_attached :draft_pack_parcel
@@ -349,9 +349,9 @@ class Pack < ActiveRecord::Base
     self.pack_puzzles.collect(&:puzzle_asset)
   end
 
-  def style_file_name attachment, style
-    return "parcels/#{attachment.name == :pack_parcel ? '' : 'draft_'}#{self.pack_code}"
-  end
+  # def style_file_name attachment, style
+  #   return "parcels/#{attachment.name == :pack_parcel ? '' : 'draft_'}#{self.pack_code}"
+  # end
 
   def set_published_puzzles
 
