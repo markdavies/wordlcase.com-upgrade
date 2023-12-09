@@ -28,7 +28,7 @@ class DataController < ActionController::Base
       format.json
     end
 
-    fresh_when @packs, public: true
+    fresh_when(etag: @packs, public: true)
     expires_in 10.minutes, public: true
 
   end
@@ -43,7 +43,7 @@ class DataController < ActionController::Base
       format.json
     end
 
-    fresh_when @packs, public: true
+    fresh_when(etag: @packs, public: true)
     expires_in 10.minutes, public: true
 
 

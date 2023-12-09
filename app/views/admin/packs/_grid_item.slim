@@ -23,7 +23,7 @@
 
         .col-sm-6
 
-          - if puzzle.puzzle_asset && !puzzle.puzzle_asset.image_reprocessing
+          - if puzzle.puzzle_asset && !puzzle.puzzle_asset.image_reprocessing && puzzle.puzzle_asset.image.attached?
             = image_tag puzzle.puzzle_asset.image.variant(resize_to_limit: [100, 100])
           - else
             img.thumbnail-image src=asset_path('transparent.gif')

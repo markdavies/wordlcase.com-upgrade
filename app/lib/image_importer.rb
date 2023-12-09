@@ -29,8 +29,6 @@ module ImageImporter
                     puzzle_asset.image.attach(io: image, filename: entry.name)
                     puzzle_asset.save!
 
-                    puts puzzle_asset.inspect
-
                     image.close
 
                 end

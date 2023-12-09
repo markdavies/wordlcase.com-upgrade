@@ -14,6 +14,7 @@ class AppConfig < ActiveRecord::Base
   # in: 0..75.megabytes,
   # message: 'is too large. Should be no larger than 75MB'
 
+  has_one_attached :puzzle_sheets
 
   def self.get
     c = AppConfig.first

@@ -10,19 +10,7 @@ class PuzzleAssetSheet < ActiveRecord::Base
         path = ':rails_root/public/:url'
     end
       
-
-    # has_attached_file :image,
-    #     url: url,
-    #     path: path
-
-    # validates_attachment_content_type :image, 
-    #     content_type: [ 'image/jpg', 'image/jpeg' ], 
-    #     message: 'is invalid. Only jpg format is permitted'
-
-    # validates_attachment_size :image,
-    #     in: 0..5.megabytes,
-    #     message: 'is too large. Should be no larger than 5MB'
-
+    has_one_attached :image
 
     def style_file_name attachment, style
         return "thumbs_#{self.pack_type}_#{self.range_string}"

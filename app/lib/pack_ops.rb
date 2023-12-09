@@ -6,7 +6,7 @@ module PackOps
     packs = Pack.all
     packs = packs.where(published: true) if only_published
     packs = packs.includes(:pack_puzzles)
-    packs = packs.filter(filters) if filters
+    packs = packs.filtered(filters) if filters
 
     published_at = false
     modified_at = false
@@ -236,6 +236,7 @@ module PackOps
 
   def self.generate_sprite_sheets pack_type
 
+    service = Rails.application.config.active_storage.service
     PuzzleAssetSheet.where('pack_type = ?', pack_type).destroy_all
 
     w = 2048
@@ -251,9 +252,9 @@ module PackOps
         thumb_groups[pack.year] = [] if !thumb_groups[pack.year]
         
         images = pack.pack_puzzles.collect do |puzzle|
-          begin
-            puzzle.puzzle_asset.image(:thumb) ? puzzle.puzzle_asset : nil
-          rescue 
+          if puzzle.puzzle_asset.image.attached?
+            puzzle.puzzle_asset.image.variant(resize_to_limit: [100, 100]).processed
+          else
             nil
           end
         end
@@ -269,18 +270,19 @@ module PackOps
       puzzles = packs.collect(&:pack_puzzles).flatten
 
       thumb_groups = puzzles.collect do |puzzle|
-        begin
-          puzzle.puzzle_asset.image(:thumb) ? puzzle.puzzle_asset : nil
-        rescue 
-          nil
-        end
+          if puzzle.puzzle_asset.image.attached?
+            puzzle.puzzle_asset.image.variant(resize_to_limit: [100, 100]).processed
+          else
+            nil
+          end
       end.compact.each_slice(PuzzleAssetSheet::IMAGES_PER_SPRITE_SHEET).to_a
 
     end
 
     thumb_groups.each_with_index do |thumb_group, idx|
 
-      tmp_path = "tmp/thumbs_#{pack_type}_#{idx}.jpg"
+      filename = "thumbs_#{pack_type}_#{idx}.jpg"
+      tmp_path = "tmp/#{filename}"
       puzzle_assets = pack_type == Pack::TYPE_DAILY ? thumb_group[1] : thumb_group
 
       MiniMagick::Tool::Convert.new do |convert|
@@ -297,7 +299,14 @@ module PackOps
         destination = MiniMagick::Image.open(tmp_path)
 
         image = puzzle_asset.image
-        url = ENV['FOG_DIRECTORY'] ? image.url(:thumbnail) : image.path(:thumbnail)
+        processed = puzzle_asset.image.variant(resize_to_limit: [100, 100]).processed
+
+        if service == :local
+          url = ActiveStorage::Blob.service.path_for(processed.key)
+        else
+          url = Rails.application.routes.url_helpers.rails_representation_url(processed.processed)
+        end
+        
         puts url
         a = MiniMagick::Image.open(url)
         x = (idx_asset % w_assets) * 100
@@ -316,7 +325,7 @@ module PackOps
       sheet.position = idx
       sheet.year = thumb_group[0] if pack_type == Pack::TYPE_DAILY
       sheet.pack_type = pack_type
-      sheet.image = File.open(tmp_path)
+      sheet.image.attach(io: File.open(tmp_path), filename: filename)
       sheet.save
 
     end
@@ -327,22 +336,24 @@ module PackOps
 
   def self.generate_sprite_sheets_zip
 
+    service = Rails.application.config.active_storage.service
     sheets  = PuzzleAssetSheet.all
-    tmp_zip = Rails.root.join('tmp') + "puzzle_sheets_#{Time.now.to_i}.zip"
+    filename = "puzzle_sheets_#{Time.now.to_i}.zip"
+    tmp_zip = Rails.root.join('tmp') + filename
 
     Zip::OutputStream.open(tmp_zip) do |zos|
 
       sheets.each do |sheet|
 
-        entry_key = File.basename(sheet.image.url)
-        entry_key = entry_key.split('?')[0]
+        if sheet.image.attached?
+          entry_key = sheet.image.blob.filename.base
+          zos.put_next_entry(entry_key)
 
-        zos.put_next_entry(entry_key)
-
-        if sheet.image.options[:storage] == :filesystem
-          zos.print File.read(sheet.image.path(:original))
-        else
-          zos.print URI.parse(sheet.image(:original)).read
+          if service == :local
+            zos.print sheet.image.download
+          else
+            zos.print URI.parse(sheet.image.url).read
+          end
         end
 
       end
@@ -350,7 +361,7 @@ module PackOps
     end
 
     config = AppConfig.get
-    config.puzzle_sheets = File.open(tmp_zip)
+    config.puzzle_sheets.attach(io: File.open(tmp_zip), filename: filename)
     config.save
 
   end

@@ -1,7 +1,6 @@
 class Admin::ApplicationController < ActionController::Base
 
   before_action :authenticate_admin_user!
-  before_action :admin_auth_level_only!, only: [:set_positions, :set_position]
   before_action :get_app_config
 
   layout 'admin'
